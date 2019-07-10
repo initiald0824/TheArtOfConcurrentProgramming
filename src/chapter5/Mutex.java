@@ -24,7 +24,7 @@ public class Mutex implements Lock {
         @Override
         public boolean tryAcquire(int acquires)  {
             if (compareAndSetState(0, 1)) {
-                setExclusiveOwnerThread(Thread.currentThread());;
+                setExclusiveOwnerThread(Thread.currentThread());
                 return true;
             }
             return false;
@@ -85,7 +85,7 @@ public class Mutex implements Lock {
         return sync.isHeldExclusively();
     }
 
-    public boolean hasQueuedThread() {
+    public boolean hasQueuedThreads() {
         return sync.hasQueuedThreads();
     }
 }
