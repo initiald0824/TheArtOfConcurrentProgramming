@@ -11,14 +11,11 @@ import java.util.concurrent.TimeUnit;
  * @date 2019/7/9 21:16
  */
 public class ConnectionDriver {
-    static class ConnectionHandler implements InvocationHandler {
-        @Override
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            if (method.getName().equals("commit")) {
-                TimeUnit.SECONDS.sleep(100);
-            }
-            return null;
-        }
+
+    private Object target;
+
+    public ConnectionDriver(Object target) {
+        this.target = target;
     }
 
     /**
@@ -27,6 +24,14 @@ public class ConnectionDriver {
      */
     public static final Connection createConnection() {
         return (Connection) Proxy.newProxyInstance(ConnectionDriver.class.getClassLoader(),
-                new Class<?>[] {Connection.class}, new ConnectionHandler());
+                new Class<?>[] {Connection.class}, new InvocationHandler() {
+                    @Override
+                    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                        if (method.getName().equals("commit")) {
+                            TimeUnit.MILLISECONDS.sleep(100);
+                        }
+                        return null;
+                    }
+                });
     }
 }
